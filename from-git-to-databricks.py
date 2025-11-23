@@ -28,12 +28,11 @@ from typing import Dict, Optional
 import requests
 from dotenv import load_dotenv
 
-# Load .env file (won't override existing env vars)
 load_dotenv()
 
 
 # ===========================================
-# CONFIG - From environment variables
+# CONFIG - From env file
 # ===========================================
 def get_config() -> dict:
     required = ["GITHUB_REPO", "GITHUB_PAT", "DATABRICKS_HOST", "DATABRICKS_TOKEN"]
@@ -41,7 +40,8 @@ def get_config() -> dict:
     
     if missing:
         raise EnvironmentError(f"Missing required environment variables: {', '.join(missing)}")
-    
+
+#If optionals are missing, sets a default    
     return {
         "github_repo": os.environ["GITHUB_REPO"],
         "github_pat": os.environ["GITHUB_PAT"],
@@ -201,7 +201,7 @@ def main():
         sys.exit(1)
     
     # Step 2: Detect changes and upload
-    logging.info("Step 2: Detecting changed .sql files")
+    logging.info("Step 2: Detecting changed files")
     
     checksum_file = config["log_dir"] / ".checksums"
     tracker = ChecksumTracker(checksum_file)
